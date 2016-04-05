@@ -8,12 +8,14 @@ public class BinaryTree
     private char payload;
     private BinaryTree leftTree;
     private BinaryTree rightTree;
+    private char temp;
 
     public BinaryTree(char payload)
     {
         this.payload = payload;
         this.leftTree = null;
         this.rightTree = null;
+        this.temp = temp;
     }
 
     public boolean isOutOfBalance()
@@ -23,20 +25,54 @@ public class BinaryTree
         return Math.abs(leftDepth-rightDepth) > 1;
     }
 
-    public String outOfBalanceSecondarily(char val)
+    //create a pointer to the current root
+    //change the current root to the new root node while keeping a pointer on the old root
+    //add old root node to the new tree with the new root
+
+    public char rotateLeftLeft(char val)
+    {
+        if (this.leftTree.isOutOfBalance());
+        {
+                temp = val;
+                rightTree.add(temp);
+                return rotateLeftLeft(val);
+        }
+    }
+
+    public char rotateRightRight(char val)
+    {
+        if (this.rightTree.isOutOfBalance());
+        {
+            temp = val;
+            leftTree.add(temp);
+            return rotateRightRight(val);
+        }
+    }
+
+    public String outOfBalanceSecondarily(char val, String lastTurn)
     {
         //are we looking at a matching payload and are we a leaf node
         if(this.payload == val && this.leftTree == null)
         {
-
+            //we are looking at THE last tree added
             //return the last turn we made
-            //HOW DO WE KNOW WHAT WAS THE LAST TURN?
-            //did we go left or right in our last move down the tree?
-            //identify the last turn by creating a singleton
+            return lastTurn;
         }
         else
         {
+            //I might have a payload that matches val, or I am still looking for a matching payload
+            //in either case, I am not at THE last leaf added.
+
             //keep traversing the tree and ultimately return left or right
+            if(val <= this.payload)
+            {
+                //we would have added it to the left
+                return this.leftTree.outOfBalanceSecondarily(val, "left");
+            }
+            else
+            {
+                return this.rightTree.outOfBalanceSecondarily(val, "right");
+            }
         }
     }
 
