@@ -8,14 +8,22 @@ public class BinaryTree
     private char payload;
     private BinaryTree leftTree;
     private BinaryTree rightTree;
-    private char temp;
 
     public BinaryTree(char payload)
     {
         this.payload = payload;
         this.leftTree = null;
         this.rightTree = null;
-        this.temp = temp;
+    }
+
+    public void setLeftTree(BinaryTree leftTree)
+    {
+        this.leftTree = leftTree;
+    }
+
+    public void setRightTree(BinaryTree rightTree)
+    {
+        this.rightTree = rightTree;
     }
 
     public boolean isOutOfBalance()
@@ -23,30 +31,6 @@ public class BinaryTree
         int leftDepth = this.leftTree == null?0:this.leftTree.depth();
         int rightDepth = this.rightTree == null?0:this.rightTree.depth();
         return Math.abs(leftDepth-rightDepth) > 1;
-    }
-
-    //create a pointer to the current root
-    //change the current root to the new root node while keeping a pointer on the old root
-    //add old root node to the new tree with the new root
-
-    public char rotateLeftLeft(char val)
-    {
-        if (this.leftTree.isOutOfBalance());
-        {
-                temp = val;
-                rightTree.add(temp);
-                return rotateLeftLeft(val);
-        }
-    }
-
-    public char rotateRightRight(char val)
-    {
-        if (this.rightTree.isOutOfBalance());
-        {
-            temp = val;
-            leftTree.add(temp);
-            return rotateRightRight(val);
-        }
     }
 
     public String outOfBalanceSecondarily(char val, String lastTurn)
@@ -83,13 +67,43 @@ public class BinaryTree
                 (this.rightTree == null?0:this.rightTree.depth()));
     }
 
+    public void add(BinaryTree tree)
+    {
+        if(tree.payload <= this.payload)
+        {
+            if(this.leftTree == null)
+            {
+                this.leftTree = tree;
+            }
+            else
+            {
+                this.leftTree.add(tree);
+            }
+        }
+        else
+        {
+            if(this.rightTree == null)
+            {
+                this.rightTree = tree;
+            }
+            else
+            {
+                this.rightTree.add(tree);
+            }
+        }
+    }
+
     public void add(char payload)
     {
+        BSTCore.grandParent = BSTCore.parent;
+        BSTCore.parent = BSTCore.pivot;
+        BSTCore.pivot = this;
         if(payload <= this.payload)
         {
             if(this.leftTree == null)
             {
                 this.leftTree = new BinaryTree(payload);
+                BSTCore.culprit = this.leftTree;
             }
             else
             {
@@ -101,6 +115,7 @@ public class BinaryTree
             if(this.rightTree == null)
             {
                 this.rightTree = new BinaryTree(payload);
+                BSTCore.culprit = this.rightTree;
             }
             else
             {

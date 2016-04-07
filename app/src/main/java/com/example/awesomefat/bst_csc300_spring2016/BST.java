@@ -12,6 +12,7 @@ public class BST
     public BST()
     {
         this.root = null;
+        BSTCore.theTree = this;
     }
 
     public boolean isOutOfBalance()
@@ -36,11 +37,42 @@ public class BST
         System.out.println("Out of balance: " + outOfBalanceInitial + " - " + outOfBalanceSecondarily);
     }
 
+    public void rebalanceLeftLeft()
+    {
+        //assuming we are out of balance left-left
+        if(BSTCore.grandParent != null) //if we have a grandparent
+        {
+            BSTCore.grandParent.setLeftTree(BSTCore.pivot); //set his left tree to pivot
+        }
+        else
+        {
+            BSTCore.theTree.root = BSTCore.pivot; //if we do not have a grandparent, set BST's root to pivot
+        }
+        BSTCore.parent.setLeftTree(null); //set parent's left tree to null. Parent is no longer connected to pivot but a free agent
+        BSTCore.pivot.add(BSTCore.parent); //add parent to pivot. Pivot is now the new root
+    }
+
+    public void rebalanceRightRight()
+    {
+        //assuming we are out of balance right-right
+        if (BSTCore.grandParent != null) //if we have a grandparent
+        {
+            BSTCore.grandParent.setRightTree(BSTCore.pivot); //set his right tree to pivot
+        }
+        else
+        {
+            BSTCore.theTree.root = BSTCore.pivot; //if we do not have a grandparent, set BST's root to pivot
+        }
+        BSTCore.parent.setRightTree(null); //set parent's right tree to null. Parent is no longer connected to pivot but a free agent
+        BSTCore.pivot.add(BSTCore.parent); //add parent to pivot. Pivot is now the new root
+    }
+
     public void add(char payload)
     {
         if(this.root == null)
         {
             this.root = new BinaryTree(payload);
+            BSTCore.culprit = this.root;
         }
         else
         {
